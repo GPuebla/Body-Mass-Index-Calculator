@@ -64,12 +64,14 @@ def main_window(frm_main):
     ent_Weight.grid(row=4, column=1)
     lbl_Weight_unit = Label(frm_main, text="kg")
     lbl_Weight_unit.grid(row=4, column=2)
+    lbl_result = Label(frm_main, text="----TEST_RESULT----")
+    lbl_result.grid(row=5, column=1)
 
 
     btn_calculate = Button(frm_main, text="Calculate", background= "green")
-    btn_calculate.grid(row=5, column=1)
+    btn_calculate.grid(row=6, column=1)
     btn_clear = Button(frm_main, text="Clear", background= "gray")
-    btn_clear.grid(row=5, column=2)
+    btn_clear.grid(row=6, column=2)
 
     def clear():
         """Clear all the inputs and outputs."""
@@ -79,8 +81,14 @@ def main_window(frm_main):
         ent_Weight.clear()
         ent_age.focus()
 
+    def calculate():
+        age = ent_age.get()
+        lbl_result.config(text= f'test= {age}')
+
 
     btn_clear.config(command=clear)
+    btn_calculate.config(command=calculate)
+
 
 if __name__ == "__main__":
     main()
