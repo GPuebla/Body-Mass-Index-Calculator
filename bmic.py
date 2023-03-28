@@ -15,7 +15,7 @@ def main():
 
     # Call the main_window function, which will add
     # labels, text entry boxes, and buttons to the main window.
-
+    
     main_window(frm_main)
 
     # Start the tkinter loop that processes user events
@@ -50,13 +50,12 @@ def main_window(frm_main):
     rad2 = Radiobutton(frm_main, text="Famale", value=2)
     rad2.grid(row=2, column=2)
 
-
     lbl_height = Label(frm_main, text="Height" )
     lbl_height.grid(row=3, column=0)
     ent_height = FloatEntry(frm_main, width=15, lower_bound=60, upper_bound=2000)
     ent_height.grid(row=3, column=1)
-    lbl_height_unit = Label(frm_main, text="cm")
-    lbl_height_unit.grid(row=3, column=2)
+    # lbl_height_unit = Label(frm_main, text="cm")
+    # lbl_height_unit.grid(row=3, column=2)
 
     lbl_Weight = Label(frm_main, text="Weight" )
     lbl_Weight.grid(row=4, column=0)
@@ -64,6 +63,12 @@ def main_window(frm_main):
     ent_Weight.grid(row=4, column=1)
     lbl_Weight_unit = Label(frm_main, text="kg")
     lbl_Weight_unit.grid(row=4, column=2)
+
+    ent_height2 = FloatEntry(frm_main, width=0, lower_bound=60, upper_bound=2000)
+    ent_height2.grid(row=3, column=3)
+    lbl_height2_unit = Label(frm_main, text="")
+    lbl_height2_unit.grid(row=3, column=4)
+
     lbl_result = Label(frm_main, text="----TEST_RESULT----")
     lbl_result.grid(row=5, column=1)
 
@@ -77,17 +82,47 @@ def main_window(frm_main):
         """Clear all the inputs and outputs."""
         btn_clear.focus()
         ent_age.clear()
-        ent_height.clear()
+        # ent_height.clear()
         ent_Weight.clear()
         ent_age.focus()
 
     def calculate():
-        age = ent_age.get()
-        lbl_result.config(text= f'test= {age}')
+        lbl_result.config(text= f'test= 123')
 
+    def callbackFunc(event):
+        unit = event.widget.get()
+
+        if unit == "Metric":
+            
+            ent_height2.config(width=0)
+            lbl_height2_unit.config(text="")
+
+            # lbl_height_unit = Label(frm_main, text="cm")
+            # lbl_height_unit.grid(row=3, column=2)
+            
+            lbl_height_unit.config(text="cm")
+            lbl_Weight_unit.config(text="kg")
+
+        elif unit == "Us":
+
+            lbl_height_unit = Label(frm_main, text="feet")
+            lbl_height_unit.grid(row=3, column=2)
+
+            # ent_height2 = FloatEntry(frm_main, width=7, lower_bound=60, upper_bound=2000)
+            # ent_height2.grid(row=3, column=3)
+            ent_height2.config(width=7)
+            lbl_height2_unit.config(text="inches")
+            # lbl_height2_unit = Label(frm_main, text="inches")
+            # lbl_height2_unit.grid(row=3, column=4)
+
+            lbl_Weight_unit = Label(frm_main, text="pounds")
+            lbl_Weight_unit.grid(row=4, column=2)
 
     btn_clear.config(command=clear)
-    btn_calculate.config(command=calculate)
+    btn_calculate.config(command=calculate) 
+
+    comb.current()
+    comb.bind("<<ComboboxSelected>>", callbackFunc)
 
 
 if __name__ == "__main__":
