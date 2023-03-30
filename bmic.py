@@ -80,6 +80,14 @@ def main_window(frm_main):
     def calculate_BMI_metric_unit(height,weight):
         result = 703 *(weight/(height**2))
         return result
+    
+    def calculate_BMI_US_unit(height,weight):
+        result = 703 *(weight/(height**2))
+        return result
+    
+    def convert_feet_inches_to_centimeters(feet, inches):
+        result_cm = feet * 0.3048 + inches * 0.0254
+        return result_cm
 
     def clear():
         """Clear all the inputs and outputs."""
