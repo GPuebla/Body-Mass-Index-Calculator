@@ -43,12 +43,13 @@ def main_window(frm_main):
     lbl_age_range.grid(row=1, column=2)
 
     # Creat a section witch show the leabel "Gender" and get the gender of the user.
-    lbl_gender = Label(frm_main, text="Gender" )
-    lbl_gender.grid(row=2, column=0)
-    rad1 = Radiobutton(frm_main, text="Male", value=1)
-    rad1.grid(row=2, column=1)
-    rad2 = Radiobutton(frm_main, text="Famale", value=2)
-    rad2.grid(row=2, column=2)
+
+    # lbl_gender = Label(frm_main, text="Gender" )
+    # lbl_gender.grid(row=2, column=0)
+    # rad1 = Radiobutton(frm_main, text="Male", value=1)
+    # rad1.grid(row=2, column=1)
+    # rad2 = Radiobutton(frm_main, text="Famale", value=2)
+    # rad2.grid(row=2, column=2)
 
     lbl_height = Label(frm_main, text="Height" )
     lbl_height.grid(row=3, column=0)
@@ -64,10 +65,8 @@ def main_window(frm_main):
     lbl_Weight_unit = Label(frm_main, text="kg")
     lbl_Weight_unit.grid(row=4, column=2)
 
-    ent_height2 = FloatEntry(frm_main, width=7, lower_bound=60, upper_bound=2000)
-    ent_height2.grid(row=3, column=3)
+    ent_height2 = FloatEntry(frm_main, width=7, lower_bound=0, upper_bound=200, default=0)
     lbl_height2_unit = Label(frm_main, text="inches")
-    lbl_height2_unit.grid(row=3, column=4)
 
     lbl_result = Label(frm_main, text="----TEST_RESULT----")
     lbl_result.grid(row=5, column=1)
@@ -78,17 +77,25 @@ def main_window(frm_main):
     btn_clear = Button(frm_main, text="Clear", background= "gray")
     btn_clear.grid(row=6, column=2)
 
+    def calculate_BMI_metric_unit(height,weight):
+        result = 703 *(weight/(height**2))
+        return result
+
     def clear():
         """Clear all the inputs and outputs."""
         btn_clear.focus()
         ent_age.clear()
         ent_height.clear()
+        ent_height2.clear()
         ent_Weight.clear()
         ent_age.focus()
 
     def calculate():
-        lbl_result.config(text= f'test= 123')
 
+        result = calculate_BMI_metric_unit(ent_height.get(), ent_Weight.get())
+        lbl_result.config(text= f'{result} ')
+
+        
     def callbackFunc(event):
         unit = event.widget.get()
 
@@ -97,20 +104,19 @@ def main_window(frm_main):
             lbl_height_unit.config(text="cm")
             lbl_Weight_unit.config(text="kg")
 
+            ent_height2.grid_forget()
+            lbl_height2_unit.grid_forget()
+
         elif unit == "Us":
 
-            lbl_height_unit = Label(frm_main, text="feet")
-            lbl_height_unit.grid(row=3, column=2)
-
-            # ent_height2 = FloatEntry(frm_main, width=7, lower_bound=60, upper_bound=2000)
-            # ent_height2.grid(row=3, column=3)
             ent_height2.config(width=7)
             lbl_height2_unit.config(text="inches")
-            # lbl_height2_unit = Label(frm_main, text="inches")
-            # lbl_height2_unit.grid(row=3, column=4)
 
-            lbl_height_unit.config(text="cm")
+            lbl_height_unit.config(text="feet")
             lbl_Weight_unit.config(text="pounds")
+
+            ent_height2.grid(row=3, column=3)
+            lbl_height2_unit.grid(row=3, column=4)
 
     btn_clear.config(command=clear)
     btn_calculate.config(command=calculate) 
