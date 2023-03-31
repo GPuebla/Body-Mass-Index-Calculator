@@ -65,7 +65,7 @@ def main_window(frm_main):
     lbl_Weight_unit = Label(frm_main, text="kg")
     lbl_Weight_unit.grid(row=4, column=2)
 
-    ent_height2 = FloatEntry(frm_main, width=7, lower_bound=0, upper_bound=200, default=0)
+    ent_height2 = FloatEntry(frm_main, width=7, lower_bound=0, upper_bound=200)
     lbl_height2_unit = Label(frm_main, text="inches")
 
     lbl_result = Label(frm_main, text="----TEST_RESULT----")
@@ -78,15 +78,16 @@ def main_window(frm_main):
     btn_clear.grid(row=6, column=2)
 
     def calculate_BMI(height,weight):
-        result = weight / height
+
+        result = weight / (height/100)**2
         return result
     
     def convert_feet_inches_to_cm(feet, inches):
-        result_cm = feet * 0.3048 + inches * 0.0254
+        result_cm = (feet * 0.3048 + inches * 0.0254)*100
         return result_cm
     
     def convert_pounds_to_kg(pounds):
-        result_kg = pounds * 0,45359237
+        result_kg = pounds * 0.45359237
         return result_kg
 
     def clear():
@@ -113,8 +114,8 @@ def main_window(frm_main):
             weight = convert_pounds_to_kg(pounds)
 
         result = calculate_BMI(height, weight)
-        lbl_result.config(text= f'{result:0.0f} ')
-        print(f'{height} - {weight}')
+        lbl_result.config(text= f'{result:0.2f} kg/m2')
+        print(f'{height} --- {weight}')
         
     def callbackFunc(event):
         unit = event.widget.get()
