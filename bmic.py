@@ -53,7 +53,7 @@ def main_window(frm_main):
 
     lbl_height = Label(frm_main, text="Height" )
     lbl_height.grid(row=3, column=0)
-    ent_height = FloatEntry(frm_main, width=15, lower_bound=60, upper_bound=2000)
+    ent_height = FloatEntry(frm_main, width=15, lower_bound=0, upper_bound=2000)
     ent_height.grid(row=3, column=1)
     lbl_height_unit = Label(frm_main, text="cm")
     lbl_height_unit.grid(row=3, column=2)
@@ -77,17 +77,17 @@ def main_window(frm_main):
     btn_clear = Button(frm_main, text="Clear", background= "gray")
     btn_clear.grid(row=6, column=2)
 
-    def calculate_BMI_metric_unit(height,weight):
-        result = 703 *(weight/(height**2))
+    def calculate_BMI(height,weight):
+        result = weight / height
         return result
     
-    def calculate_BMI_US_unit(height,weight):
-        result = 703 *(weight/(height**2))
-        return result
-    
-    def convert_feet_inches_to_centimeters(feet, inches):
+    def convert_feet_inches_to_cm(feet, inches):
         result_cm = feet * 0.3048 + inches * 0.0254
         return result_cm
+    
+    def convert_pounds_to_kg(pounds):
+        result_kg = pounds * 0,45359237
+        return result_kg
 
     def clear():
         """Clear all the inputs and outputs."""
@@ -99,10 +99,22 @@ def main_window(frm_main):
         ent_age.focus()
 
     def calculate():
+        units = comb.get()
+        
+        if units == "Metric":
+            height = ent_height.get()
+            weight = ent_Weight.get()
+        elif units == "Us":
+            feet = ent_height.get()
+            inches = ent_height2.get()
+            pounds = ent_Weight.get()
 
-        result = calculate_BMI_metric_unit(ent_height.get(), ent_Weight.get())
-        lbl_result.config(text= f'{result} ')
+            height = convert_feet_inches_to_cm(feet,inches)
+            weight = convert_pounds_to_kg(pounds)
 
+        result = calculate_BMI(height, weight)
+        lbl_result.config(text= f'{result:0.0f} ')
+        print(f'{height} - {weight}')
         
     def callbackFunc(event):
         unit = event.widget.get()
