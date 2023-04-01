@@ -106,6 +106,14 @@ def main_window(frm_main):
         result_kg = pounds * 0.45359237
         return result_kg
     
+    def calculate_total_months(birth_year,birth_month):
+        current_month = datetime.today().month
+        current_year = datetime.today().year
+
+        total_months = (current_year - birth_year) * 12 - (birth_month - current_month )
+
+        return total_months
+    
     def clear():
         """Clear all the inputs and outputs."""
         btn_clear.focus()
@@ -128,10 +136,14 @@ def main_window(frm_main):
 
             height = convert_feet_inches_to_cm(feet,inches)
             weight = convert_pounds_to_kg(pounds)
+        
+        m = comb_months.index()
+        y = int(comb_years.get())
 
-        test_gender = rad1.get()
+        months = calculate_total_months(y,m)
+
         result = calculate_BMI(height, weight)
-        lbl_result.config(text= f'{result:0.2f} kg/m2')
+        lbl_result.config(text= f'{result:0.2f} kg/m2' - months)
         
     def callbackFunc(event):
         unit = event.widget.get()
@@ -161,7 +173,8 @@ def main_window(frm_main):
     comb.current()
     comb.bind("<<ComboboxSelected>>", callbackFunc)
 
-def read_dictionary(filename, index):
+
+def get_bmi_percentil_of_csv(filename, index):
         """Read the contents of a CSV file and return a list.
 
         Parameters

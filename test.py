@@ -82,3 +82,14 @@ import csv
 #             starting_date += 1
 
 #         return dates
+
+
+def calculate_total_months(birth_year,birth_month):
+        current_month = datetime.today().month
+        current_year = datetime.today().year
+
+        total_months = (current_year - birth_year) * 12 - (birth_month - current_month )
+
+        return total_months
+
+calculate_total_months(1995, )
