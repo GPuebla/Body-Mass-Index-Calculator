@@ -137,7 +137,7 @@ def main_window(frm_main):
             height = convert_feet_inches_to_cm(feet,inches)
             weight = convert_pounds_to_kg(pounds)
         
-        m = comb_months.index()
+        m = comb_months.current()
         y = int(comb_years.get())
 
         months = calculate_total_months(y,m)
