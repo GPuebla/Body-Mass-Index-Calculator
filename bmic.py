@@ -3,7 +3,6 @@ from tkinter.ttk import *
 from tkinter import Frame, Label, Button, IntVar
 
 from number_entry import IntEntry, FloatEntry
-
 from datetime import datetime
 
 import csv
@@ -92,12 +91,96 @@ def main_window(frm_main):
 
     btn_clear = Button(frm_main, text="Clear", background= "gray")
     btn_clear.grid(row=9, column=2)
+  
+
+    def clear():
+        """Clear all the inputs and outputs."""
+        btn_clear.focus()
+        ent_height.clear()
+        ent_height2.clear()
+        ent_Weight.clear()
+        comb_months.current(0)
+        comb_years.current(0)
+
+        lbl_result.config(text="")
+
+
+    def calculate():
+
+        units = comb.get()
+        
+        if units == "Metric":
+            height = ent_height.get()
+            weight = ent_Weight.get()
+
+
+        elif units == "Us":
+            feet = ent_height.get()
+            inches = ent_height2.get()
+            pounds = ent_Weight.get()
+
+            height = convert_feet_inches_to_cm(feet,inches)
+            weight = convert_pounds_to_kg(pounds)
+        
+        m = comb_months.current()
+        y = int(comb_years.get())
+
+        gender = radio.get()
+        t_months = calculate_total_months(y,m)
+
+        result = calculate_BMI(height, weight)
+        status = calculate_BMI_status(t_months,gender,result)
+        
+        
+        lbl_result.config(text= f'{result:0.2f} kg/m2 {t_months} Status:{status}')
+
+
 
     def calculate_BMI(height,weight):
 
         result = weight / (height/100)**2
 
         return result
+    
+
+    def callbackFunc(event):
+        unit = event.widget.get()
+
+        if unit == "Metric":
+                        
+            lbl_height_unit.config(text="cm")
+            lbl_Weight_unit.config(text="kg")
+
+            ent_height2.grid_forget()
+            lbl_height2_unit.grid_forget()
+
+        elif unit == "Us":
+
+            ent_height2.config(width=7)
+            lbl_height2_unit.config(text="inches")
+
+            lbl_height_unit.config(text="feet")
+            lbl_Weight_unit.config(text="pounds")
+
+            ent_height2.grid(row=3, column=3)
+            lbl_height2_unit.grid(row=3, column=4)
+
+        
+    def get_bmi_list_csv(filenam, index_bmi):
+        bmi_ranges = []
+        
+        with open(filenam, "rt") as csv_file:
+
+            reader = csv.reader(csv_file)
+            next(reader)
+            
+            for row_list in reader:
+                if row_list[0] == index_bmi:
+                    for n in row_list[1:]:
+                        bmi_ranges.append(float(n))
+
+        return bmi_ranges
+    
     
     def convert_feet_inches_to_cm(feet, inches):
         result_cm = (feet * 0.3048 + inches * 0.0254)*100
@@ -171,97 +254,13 @@ def main_window(frm_main):
             return 8
         elif bmi >= range9:
             return 9
-            
 
-    def clear():
-        """Clear all the inputs and outputs."""
-        btn_clear.focus()
-        ent_height.clear()
-        ent_height2.clear()
-        ent_Weight.clear()
-        comb_months.current(0)
-        comb_years.current(0)
-
-        lbl_result.config(text="")
-
-
-    def calculate():
-
-        units = comb.get()
-        
-        if units == "Metric":
-            height = ent_height.get()
-            weight = ent_Weight.get()
-
-
-        elif units == "Us":
-            feet = ent_height.get()
-            inches = ent_height2.get()
-            pounds = ent_Weight.get()
-
-            height = convert_feet_inches_to_cm(feet,inches)
-            weight = convert_pounds_to_kg(pounds)
-        
-        m = comb_months.current()
-        y = int(comb_years.get())
-
-        gender = radio.get()
-        t_months = calculate_total_months(y,m)
-
-        result = calculate_BMI(height, weight)
-        status = calculate_BMI_status(t_months,gender,result)
-        
-        
-        lbl_result.config(text= f'{result:0.2f} kg/m2 {t_months} Status:{status}')
-
-
-
-    def callbackFunc(event):
-        unit = event.widget.get()
-
-        if unit == "Metric":
-                        
-            lbl_height_unit.config(text="cm")
-            lbl_Weight_unit.config(text="kg")
-
-            ent_height2.grid_forget()
-            lbl_height2_unit.grid_forget()
-
-        elif unit == "Us":
-
-            ent_height2.config(width=7)
-            lbl_height2_unit.config(text="inches")
-
-            lbl_height_unit.config(text="feet")
-            lbl_Weight_unit.config(text="pounds")
-
-            ent_height2.grid(row=3, column=3)
-            lbl_height2_unit.grid(row=3, column=4)
-
-
-        
-    def get_bmi_list_csv(filenam, index_bmi):
-        bmi_ranges = []
-        
-        with open(filenam, "rt") as csv_file:
-
-            reader = csv.reader(csv_file)
-            next(reader)
-            
-            for row_list in reader:
-                if row_list[0] == index_bmi:
-                    for n in row_list[1:]:
-                        bmi_ranges.append(float(n))
-
-        return bmi_ranges
-    
 
     btn_clear.config(command=clear)
     btn_calculate.config(command=calculate) 
 
     comb.current()
     comb.bind("<<ComboboxSelected>>", callbackFunc)
-
 
 
 if __name__ == "__main__":
