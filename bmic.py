@@ -86,16 +86,14 @@ def main_window(frm_main):
     lbl_height2_unit = Label(frm_main, text="inches")
 
     lbl_result = Label(frm_main, text=" ")
-    lbl_result.grid(row=5, column=1)
+    lbl_result.grid(row=6, column=1)
 
-    Output = Text(frm_main, height = 3, width = 25, bg = "light cyan")
-    Output.grid(row=6, column=1)
 
     btn_calculate = Button(frm_main, text="Calculate", background= "green")
-    btn_calculate.grid(row=7, column=1)
+    btn_calculate.grid(row=9, column=1)
 
     btn_clear = Button(frm_main, text="Clear", background= "gray")
-    btn_clear.grid(row=7, column=2)
+    btn_clear.grid(row=9, column=2)
 
     def calculate_BMI(height,weight):
 
@@ -120,33 +118,63 @@ def main_window(frm_main):
 
         return total_months
     
-    def calculate_BMI_status(months, gender, percentiles):
-
-        range1 = float(percentiles[1])
-        range2 = float(percentiles[2])
-        range3 = float(percentiles[3])
-        range4 = float(percentiles[4])
-        range5 = float(percentiles[5])
-        range6 = float(percentiles[6])
-        range7 = float(percentiles[7])
-        range8 = float(percentiles[8])
-        range9 = float(percentiles[9])
+    def calculate_BMI_status(months, gender, bmi):
         
-        status_1 = "Severe Thinness II"
-        status_2 = "Severe Thinness I"
-        status_3 = "Moderate Thinness"
-        status_4 = "Mild Thinness"
-        status_5 = "Normal"
-        status_6 = "Overweight"
-        status_7 = "Obese Class I"
-        status_8 = "Obese Class II"
-        status_9 = "Obese Class III"
+        status_list = ["Severe Thinness II","Severe Thinness I","Moderate Thinness","Mild Thinness","Obese Class I","Obese Class II","Obese Class III"]
 
-        if months > 61 and months <= 229:
-            return "TEENS-CHILDREN"
-        elif months > 229:
-            # usar los vlores de la pagina para establecer los status
-            return "ADULTS"        
+        adult_bmi_ranges = [14,16,17,18.5,25,30,35,40,42]
+
+
+        if months > 61 and months <229:
+            if gender == 1:
+                bmi_range = get_bmi_list_csv("bmi-boys.csv",months)
+                status = select_porcentile_range(bmi_range, bmi)
+                status_text =status_list[status - 1]
+                return status_text 
+
+            elif gender == 2:
+                bmi_range = get_bmi_list_csv("bmi-girls.csv",months)
+                status = select_porcentile_range(bmi_range, bmi)
+                status_text =status_list[status - 1]
+                return status_text 
+        
+        elif months >= 229:
+                status = select_porcentile_range(adult_bmi_ranges, bmi)
+                status_text =status_list[status - 1]
+                return status_text 
+        
+        def select_porcentile_range(list_bmi_ranges, bmi):
+
+            range1 = list_bmi_ranges[0]
+            range2 = list_bmi_ranges[1]
+            range3 = list_bmi_ranges[2]
+            range4 = list_bmi_ranges[3]
+            range5 = list_bmi_ranges[4]
+            range6 = list_bmi_ranges[5]
+            range7 = list_bmi_ranges[6]
+            range8 = list_bmi_ranges[7]
+            range9 = list_bmi_ranges[8]
+
+            if bmi <= range1 :
+                return 1
+            elif bmi > range1 and bmi <= range2:
+                return 2
+            elif bmi > range2 and bmi <= range3:
+                return 3
+            elif bmi > range3 and bmi <= range4:
+                return 4
+            elif bmi > range4 and bmi < range6:
+                return 5
+            elif bmi >= range6 and bmi < range7:
+                return 6
+            elif bmi >= range7 and bmi < range8:
+                return 7
+            elif bmi >= range8 and bmi < range9:
+                return 8
+            elif bmi >= range9:
+                return 9
+            
+
     
     def clear():
         """Clear all the inputs and outputs."""
@@ -156,6 +184,7 @@ def main_window(frm_main):
         ent_Weight.clear()
         comb_months.current(0)
         comb_years.current(0)
+
 
     def calculate():
         units = comb.get()
@@ -176,14 +205,17 @@ def main_window(frm_main):
         m = comb_months.current()
         y = int(comb_years.get())
 
+        gender = radio.get()
         t_months = calculate_total_months(y,m)
 
-        # msg = calculate_BMI_status(t_months,radio.get())
-        
         result = calculate_BMI(height, weight)
-        lbl_result.config(text= f'{result:0.2f} kg/m2 {t_months} ' )
-        Output.config(text= f'{result:0.2f} kg/m2 {t_months}' )
+        status = calculate_BMI_status(t_months,gender,result)
         
+        
+        lbl_result.config(text= f'{result:0.2f} kg/m2 {t_months} STATUS:{status}')
+
+
+
     def callbackFunc(event):
         unit = event.widget.get()
 
@@ -206,25 +238,12 @@ def main_window(frm_main):
             ent_height2.grid(row=3, column=3)
             lbl_height2_unit.grid(row=3, column=4)
 
-    btn_clear.config(command=clear)
-    btn_calculate.config(command=calculate) 
-
-    comb.current()
-    comb.bind("<<ComboboxSelected>>", callbackFunc)
-
-
-def get_bmi_percentil_of_csv(filename, index):
-        """Read the contents of a CSV file and return a list.
-
-        Parameters
-            filename: the name of the CSV file to read.
-            
-        Return: a list with the values of de index month
-        """
-        bmi_percentils = []
 
         
-        with open(filename, "rt") as csv_file:
+    def get_bmi_list_csv(filenam, index_bmi):
+        bmi_ranges = []
+        
+        with open(filenam, "rt") as csv_file:
 
             reader = csv.reader(csv_file)
             next(reader)
@@ -232,9 +251,33 @@ def get_bmi_percentil_of_csv(filename, index):
             for row_list in reader:
                 if row_list[0] == index:
                     for n in row_list[1:]:
-                        bmi_percentils.append(float(n))
+                        bmi_ranges.append(float(n))
 
-        return bmi_percentils
+        return bmi_ranges
+    
+
+    btn_clear.config(command=clear)
+    btn_calculate.config(command=calculate) 
+
+    comb.current()
+    comb.bind("<<ComboboxSelected>>", callbackFunc)
+
+
+# def get_bmi_percentil_of_csv(filename, index):
+        
+#         bmi_ranges = []
+        
+#         with open(filename, "rt") as csv_file:
+
+#             reader = csv.reader(csv_file)
+#             next(reader)
+            
+#             for row_list in reader:
+#                 if row_list[0] == index:
+#                     for n in row_list[1:]:
+#                         bmi_ranges.append(float(n))
+
+#         return bmi_ranges
 
 
 
