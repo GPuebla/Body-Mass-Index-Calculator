@@ -93,11 +93,6 @@ def main_window(frm_main):
     btn_clear = Button(frm_main, text="Clear", background= "gray")
     btn_clear.grid(row=9, column=2)
 
-    def calculate_BMI(height,weight):
-
-        result = weight / (height/100)**2
-
-        return result
     
     def convert_feet_inches_to_cm(feet, inches):
         result_cm = (feet * 0.3048 + inches * 0.0254)*100
@@ -140,37 +135,6 @@ def main_window(frm_main):
                 status = select_porcentile_range(adult_bmi_ranges, bmi)
                 status_text =status_list[status - 1]
                 return status_text 
-        
-    def select_porcentile_range(list_bmi_ranges, bmi):
-
-        range1 = list_bmi_ranges[0]
-        range2 = list_bmi_ranges[1]
-        range3 = list_bmi_ranges[2]
-        range4 = list_bmi_ranges[3]
-        range5 = list_bmi_ranges[4]
-        range6 = list_bmi_ranges[5]
-        range7 = list_bmi_ranges[6]
-        range8 = list_bmi_ranges[7]
-        range9 = list_bmi_ranges[8]
-
-        if bmi <= range1 :
-            return 1
-        elif bmi > range1 and bmi <= range2:
-            return 2
-        elif bmi > range2 and bmi <= range3:
-            return 3
-        elif bmi > range3 and bmi <= range4:
-            return 4
-        elif bmi > range4 and bmi < range6:
-            return 5
-        elif bmi >= range6 and bmi < range7:
-            return 6
-        elif bmi >= range7 and bmi < range8:
-            return 7
-        elif bmi >= range8 and bmi < range9:
-            return 8
-        elif bmi >= range9:
-            return 9
             
 
     def clear():
@@ -263,6 +227,42 @@ def main_window(frm_main):
     comb.bind("<<ComboboxSelected>>", callbackFunc)
 
 
+def calculate_BMI(height,weight):
+
+        result = weight / (height/100)**2
+
+        return result
+
+def select_porcentile_range(list_bmi_ranges, bmi):
+
+        range1 = list_bmi_ranges[0]
+        range2 = list_bmi_ranges[1]
+        range3 = list_bmi_ranges[2]
+        range4 = list_bmi_ranges[3]
+        range5 = list_bmi_ranges[4]
+        range6 = list_bmi_ranges[5]
+        range7 = list_bmi_ranges[6]
+        range8 = list_bmi_ranges[7]
+        range9 = list_bmi_ranges[8]
+
+        if bmi <= range1 :
+            return 1
+        elif bmi > range1 and bmi <= range2:
+            return 2
+        elif bmi > range2 and bmi <= range3:
+            return 3
+        elif bmi > range3 and bmi <= range4:
+            return 4
+        elif bmi > range4 and bmi < range6:
+            return 5
+        elif bmi >= range6 and bmi < range7:
+            return 6
+        elif bmi >= range7 and bmi < range8:
+            return 7
+        elif bmi >= range8 and bmi < range9:
+            return 8
+        elif bmi >= range9:
+            return 9
 
 if __name__ == "__main__":
     main()

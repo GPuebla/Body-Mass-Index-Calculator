@@ -1,7 +1,7 @@
 import pytest
 from os import path
 from pytest import approx
-from bmic import calculate_BMI, convert_feet_inches_to_cm, convert_pounds_to_kg, calculate_total_months, calculate_BMI_status, select_porcentile_range, get_bmi_list_csv
+from bmic import calculate_BMI
 
 def test_calculate_BMI():
     assert calculate_BMI(173, 74) == approx(24,72)
