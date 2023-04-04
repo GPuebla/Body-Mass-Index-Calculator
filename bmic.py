@@ -3,6 +3,7 @@ from tkinter.ttk import *
 from tkinter import Frame, Label, Button, IntVar
 
 from number_entry import IntEntry, FloatEntry
+
 from datetime import datetime
 
 import csv
@@ -91,7 +92,50 @@ def main_window(frm_main):
 
     btn_clear = Button(frm_main, text="Clear", background= "gray")
     btn_clear.grid(row=9, column=2)
-  
+
+    
+    def convert_feet_inches_to_cm(feet, inches):
+        result_cm = (feet * 0.3048 + inches * 0.0254)*100
+
+        return result_cm
+    
+    def convert_pounds_to_kg(pounds):
+        result_kg = pounds * 0.45359237
+
+        return result_kg
+    
+    def calculate_total_months(birth_year,birth_month):
+        current_month = datetime.today().month
+        current_year = datetime.today().year
+        total_months = (current_year - birth_year) * 12 - (birth_month - current_month )
+
+        return total_months
+    
+    def calculate_BMI_status(months, gender, bmi):
+        
+        status_list = ["Severe Thinness II","Severe Thinness I","Moderate Thinness","Mild Thinness","Normal","Overweight","Obese Class I","Obese Class II","Obese Class III"]
+
+        adult_bmi_ranges = [14,16,17,18.5,20,25,30,35,40]
+
+
+        if months > 61 and months <229:
+            if gender == 1:
+                bmi_range = get_bmi_list_csv("bmi-boys.csv",str(months))
+                status = select_porcentile_range(bmi_range, bmi)
+                status_text =status_list[status - 1]
+                return status_text 
+
+            elif gender == 2:
+                bmi_range = get_bmi_list_csv("bmi-girls.csv",str(months))
+                status = select_porcentile_range(bmi_range, bmi)
+                status_text =status_list[status - 1]
+                return status_text 
+        
+        elif months >= 229:
+                status = select_porcentile_range(adult_bmi_ranges, bmi)
+                status_text =status_list[status - 1]
+                return status_text 
+            
 
     def clear():
         """Clear all the inputs and outputs."""
@@ -136,13 +180,6 @@ def main_window(frm_main):
 
 
 
-    def calculate_BMI(height,weight):
-
-        result = weight / (height/100)**2
-
-        return result
-    
-
     def callbackFunc(event):
         unit = event.widget.get()
 
@@ -165,6 +202,7 @@ def main_window(frm_main):
             ent_height2.grid(row=3, column=3)
             lbl_height2_unit.grid(row=3, column=4)
 
+
         
     def get_bmi_list_csv(filenam, index_bmi):
         bmi_ranges = []
@@ -181,50 +219,21 @@ def main_window(frm_main):
 
         return bmi_ranges
     
-    
-    def convert_feet_inches_to_cm(feet, inches):
-        result_cm = (feet * 0.3048 + inches * 0.0254)*100
 
-        return result_cm
-    
-    def convert_pounds_to_kg(pounds):
-        result_kg = pounds * 0.45359237
+    btn_clear.config(command=clear)
+    btn_calculate.config(command=calculate) 
 
-        return result_kg
-    
-    def calculate_total_months(birth_year,birth_month):
-        current_month = datetime.today().month
-        current_year = datetime.today().year
-        total_months = (current_year - birth_year) * 12 - (birth_month - current_month )
-
-        return total_months
-    
-    def calculate_BMI_status(months, gender, bmi):
-        
-        status_list = ["Severe Thinness II","Severe Thinness I","Moderate Thinness","Mild Thinness","Normal","Overweight","Obese Class I","Obese Class II","Obese Class III"]
-
-        adult_bmi_ranges = [14,16,17,18.5,20,25,30,35,40]
+    comb.current()
+    comb.bind("<<ComboboxSelected>>", callbackFunc)
 
 
-        if months > 61 and months <229:
-            if gender == 1:
-                bmi_range = get_bmi_list_csv("bmi-boys.csv",str(months))
-                status = select_porcentile_range(bmi_range, bmi)
-                status_text =status_list[status - 1]
-                return status_text 
+def calculate_BMI(height,weight):
 
-            elif gender == 2:
-                bmi_range = get_bmi_list_csv("bmi-girls.csv",str(months))
-                status = select_porcentile_range(bmi_range, bmi)
-                status_text =status_list[status - 1]
-                return status_text 
-        
-        elif months >= 229:
-                status = select_porcentile_range(adult_bmi_ranges, bmi)
-                status_text =status_list[status - 1]
-                return status_text 
-        
-    def select_porcentile_range(list_bmi_ranges, bmi):
+        result = weight / (height/100)**2
+
+        return result
+
+def select_porcentile_range(list_bmi_ranges, bmi):
 
         range1 = list_bmi_ranges[0]
         range2 = list_bmi_ranges[1]
@@ -254,14 +263,6 @@ def main_window(frm_main):
             return 8
         elif bmi >= range9:
             return 9
-
-
-    btn_clear.config(command=clear)
-    btn_calculate.config(command=calculate) 
-
-    comb.current()
-    comb.bind("<<ComboboxSelected>>", callbackFunc)
-
 
 if __name__ == "__main__":
     main()
