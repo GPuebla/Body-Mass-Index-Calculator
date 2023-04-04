@@ -94,48 +94,8 @@ def main_window(frm_main):
     btn_clear.grid(row=9, column=2)
 
     
-    def convert_feet_inches_to_cm(feet, inches):
-        result_cm = (feet * 0.3048 + inches * 0.0254)*100
-
-        return result_cm
-    
-    def convert_pounds_to_kg(pounds):
-        result_kg = pounds * 0.45359237
-
-        return result_kg
-    
-    def calculate_total_months(birth_year,birth_month):
-        current_month = datetime.today().month
-        current_year = datetime.today().year
-        total_months = (current_year - birth_year) * 12 - (birth_month - current_month )
-
-        return total_months
-    
-    def calculate_BMI_status(months, gender, bmi):
+     
         
-        status_list = ["Severe Thinness II","Severe Thinness I","Moderate Thinness","Mild Thinness","Normal","Overweight","Obese Class I","Obese Class II","Obese Class III"]
-
-        adult_bmi_ranges = [14,16,17,18.5,20,25,30,35,40]
-
-
-        if months > 61 and months <229:
-            if gender == 1:
-                bmi_range = get_bmi_list_csv("bmi-boys.csv",str(months))
-                status = select_porcentile_range(bmi_range, bmi)
-                status_text =status_list[status - 1]
-                return status_text 
-
-            elif gender == 2:
-                bmi_range = get_bmi_list_csv("bmi-girls.csv",str(months))
-                status = select_porcentile_range(bmi_range, bmi)
-                status_text =status_list[status - 1]
-                return status_text 
-        
-        elif months >= 229:
-                status = select_porcentile_range(adult_bmi_ranges, bmi)
-                status_text =status_list[status - 1]
-                return status_text 
-            
 
     def clear():
         """Clear all the inputs and outputs."""
@@ -201,23 +161,6 @@ def main_window(frm_main):
 
             ent_height2.grid(row=3, column=3)
             lbl_height2_unit.grid(row=3, column=4)
-
-
-        
-    def get_bmi_list_csv(filenam, index_bmi):
-        bmi_ranges = []
-        
-        with open(filenam, "rt") as csv_file:
-
-            reader = csv.reader(csv_file)
-            next(reader)
-            
-            for row_list in reader:
-                if row_list[0] == index_bmi:
-                    for n in row_list[1:]:
-                        bmi_ranges.append(float(n))
-
-        return bmi_ranges
     
 
     btn_clear.config(command=clear)
@@ -263,6 +206,64 @@ def select_porcentile_range(list_bmi_ranges, bmi):
             return 8
         elif bmi >= range9:
             return 9
+
+def convert_feet_inches_to_cm(feet, inches):
+        result_cm = (feet * 0.3048 + inches * 0.0254)*100
+
+        return result_cm
+    
+def convert_pounds_to_kg(pounds):
+    result_kg = pounds * 0.45359237
+
+    return result_kg
+
+def calculate_total_months(birth_year,birth_month):
+    current_month = datetime.today().month
+    current_year = datetime.today().year
+    total_months = (current_year - birth_year) * 12 - (birth_month - current_month )
+
+    return total_months
+
+def calculate_BMI_status(months, gender, bmi):
+    
+    status_list = ["Severe Thinness II","Severe Thinness I","Moderate Thinness","Mild Thinness","Normal","Overweight","Obese Class I","Obese Class II","Obese Class III"]
+
+    adult_bmi_ranges = [14,16,17,18.5,20,25,30,35,40]
+
+
+    if months > 61 and months <229:
+        if gender == 1:
+            bmi_range = get_bmi_list_csv("bmi-boys.csv",str(months))
+            status = select_porcentile_range(bmi_range, bmi)
+            status_text =status_list[status - 1]
+            return status_text 
+
+        elif gender == 2:
+            bmi_range = get_bmi_list_csv("bmi-girls.csv",str(months))
+            status = select_porcentile_range(bmi_range, bmi)
+            status_text =status_list[status - 1]
+            return status_text 
+    
+    elif months >= 229:
+            status = select_porcentile_range(adult_bmi_ranges, bmi)
+            status_text =status_list[status - 1]
+            return status_text
+    
+def get_bmi_list_csv(filenam, index_bmi):
+    bmi_ranges = []
+    
+    with open(filenam, "rt") as csv_file:
+
+        reader = csv.reader(csv_file)
+        next(reader)
+        
+        for row_list in reader:
+            if row_list[0] == index_bmi:
+                for n in row_list[1:]:
+                    bmi_ranges.append(float(n))
+
+    return bmi_ranges
+    
 
 if __name__ == "__main__":
     main()
