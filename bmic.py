@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter.ttk import *
 from tkinter import Frame, Label, Button, IntVar
 
-from number_entry import IntEntry, FloatEntry
+from number_entry import FloatEntry
 
 from datetime import datetime
 
@@ -83,19 +83,18 @@ def main_window(frm_main):
     ent_height2 = FloatEntry(frm_main, width=7, lower_bound=0, upper_bound=300)
     lbl_height2_unit = Label(frm_main, text="inches")
 
-    lbl_result = Label(frm_main, text=" ")
+    lbl_result = Label(frm_main, text=" ",font=("Arial black", 8))
     lbl_result.grid(row=6, column=1)
+    lbl_result2 = Label(frm_main, text=" ",font=("Arial black", 8))
+    lbl_result2.grid(row=7, column=1)
 
 
     btn_calculate = Button(frm_main, text="Calculate", background= "green")
-    btn_calculate.grid(row=9, column=1)
+    btn_calculate.grid(row=10, column=1)
 
     btn_clear = Button(frm_main, text="Clear", background= "gray")
-    btn_clear.grid(row=9, column=2)
+    btn_clear.grid(row=10, column=2)
 
-    
-     
-        
 
     def clear():
         """Clear all the inputs and outputs."""
@@ -136,7 +135,7 @@ def main_window(frm_main):
         status = calculate_BMI_status(t_months,gender,result)
         
         
-        lbl_result.config(text= f'{result:0.2f} kg/m2 {t_months} Status:{status}')
+        lbl_result.config(text= f'Your BMI is: {result:0.2f} kg/m2 - Status: {status}')
 
 
 
